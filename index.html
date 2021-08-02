@@ -19,34 +19,18 @@
     <body>
 		<div id="info">
 	</div>
-	<script id="vertexShader" type="x-shader/x-vertex">
-		uniform float time;
-		varying vec2 vUv;
-		varying vec3 vPosition;
-		uniform vec2 pixels;
-		float PI = 3.141592;
-
-		void main()	{
-			vUv = uv;
-			vPosition = position;
-			gl_Position = projectionMatrix *  modelViewMatrix  * vec4( position, 1.0 );
-		}
-	</script>
-	<script id="fragmentShader" type="x-shader/x-fragment">
-		uniform float time;
-		varying vec2 vUv;
-		varying vec3 vPosition;
-		uniform vec2 pixels;
-		float PI = 3.141592;
-		void main()	{
-			gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0)
-		}
-	  </script>
 	<script>		
+
+	// http://planetpixelemporium.com
 	
 	var scene = new THREE.Scene(); 
-
+	var planets = [];
 	var sun, mercury, venus, earth, moon, mars, jupiter, saturn, uranus, neptune;
+	// var mercuryData = {orbitRate: 87.9691, rotationRate: 0.015, distanceFromSun: 10};
+	// var venusData = {orbitRate: 224.701, rotationRate: 0.001, distanceFromSun: 18};
+	// var earthData = {orbitRate: 365.2564, rotationRate: 0.015, distanceFromSun: 28};
+
+	var orbitValue = 10;
 
  	// Camera
 	var camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 1, 20000 );
@@ -72,94 +56,187 @@
 	directionalLight.position.set( 0, 1, 1 ).normalize();
 	scene.add( directionalLight );	
 
- 	// Loading planet models
-	var loader = new THREE.GLTFLoader();
-
 	// ---- SUN ---------------------
-	loader.load( 'model/sun/sun.gltf', function ( gltf ) {          
-		sun = gltf.scene;			
-		gltf.scene.scale.set( 18, 18, 18 );	
-		gltf.scene.position.set(0,-2,-3)
-		scene.add( gltf.scene );
+
+	var sunTexture = new THREE.ImageUtils.loadTexture("img/sun.jpg", {}, function () {});
+	var sunMaterial = new THREE.MeshBasicMaterial({
+		map: sunTexture
 	});
 
-	// geometry = new THREE.SphereBufferGeometry(1, 30,30);
-  	// materialSun = new THREE.ShaderMaterial({
-	// 	extensions: {
-	// 	derivatives: "#extension GL_OES_standard_derivatives : enable"
-	// 	},
-	// 	side: THREE.DoubleSide,
-	// 	uniforms: {
-	// 	time: {value: 0},
-	// 	uPerlin: {value: null},
-	// 	resolution: { value: new THREE.Vector4() }
-	// 	},
-	// 	vertexShader: document.getElementById("vertexShader").textContent,
-	// 	fragmentShader: document.getElementById("fragmentShader").textContent
- 	// });
+  // Definition of 'Planet' type objects
+	function Planet(x, y, z, size, speed, radius, radian, degree, texture, cloudTexture){
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.size = size;
+		this.speed = speed;
+		this.radius = radius;
+		this.radian = radian;
+    this.degree = degree;
+		this.texture = texture;
+		this.cloudTexture = cloudTexture
+	}
 
-	// sun = new THREE.Mesh(geometry, materialSun)
-	// sun.position.set(0,-2,-3)
-	// scene.add(sun)
+	mercury = new Planet( 0                     // x
+                      , 2					            // y
+                      , 11 					          // z
+                      , 0.6					          // size
+                      , 0.1					          // speed
+                      , 9 					          // radius
+                      , 0					            // radian
+                      , Math.random() * 1000  // degree
+                      , new THREE.ImageUtils.loadTexture("img/mercury.jpg", {}, function () {})
+                      , null)
+	planets.push(mercury);
 
-	// --------------------------------
+	venus = new Planet( 0                     // x
+                    , 2				              // y
+                    , 17 					          // z
+                    , 1					            // size
+                    , 0.08				          // speed
+                    , 15 					          // radius
+                    , 0					            // radian
+                    , Math.random() * 1000  // degree
+                    , new THREE.ImageUtils.loadTexture("img/venus.jpg", {}, function () {})
+                    , null)
+	planets.push(venus);
+  
+  earth = new Planet( 0                     // x
+                    , 2				              // y
+                    , 25					          // z
+                    , 1					            // size
+                    , 0.07 			            // speed
+                    , 23 					          // radius
+                    , 0					            // radian
+                    , Math.random() * 1000  // degree
+                    , new THREE.ImageUtils.loadTexture("img/earth.jpg", {}, function () {})
+                    , null)
+	planets.push(earth);
 
-	loader.load( 'model/mercury/mercury.gltf', function ( gltf ) {           
-		mercury = gltf.scene;			
-		gltf.scene.scale.set( 2, 2, 2 );			   
-		gltf.scene.position.set(0, 2, 12);
-		scene.add( gltf.scene);
-	});
+  mars = new Planet( 0                      // x
+                    , 2				              // y
+                    , 33					          // z
+                    , 1					            // size
+                    , 0.05				          // speed
+                    , 31 					          // radius
+                    , 0					            // radian
+                    , Math.random() * 1000  // degree
+                    , new THREE.ImageUtils.loadTexture("img/mars.jpg", {}, function () {})
+                    , null)
+	planets.push(mars);
 
-	loader.load( 'model/venus/venus.gltf', function ( gltf ) {           
-		venus = gltf.scene;
-		gltf.scene.scale.set( 2, 2, 2 );			   
-		gltf.scene.position.set(0, 2, 20);
-		scene.add(gltf.scene);
-	});
+  jupiter = new Planet( 0                     // x
+                      , 2				              // y
+                      , 40					          // z
+                      , 2					            // size
+                      , 0.04				          // speed
+                      , 38 					          // radius
+                      , 0					            // radian
+                      , Math.random() * 1000  // degree
+                      , new THREE.ImageUtils.loadTexture("img/jupiter.jpg", {}, function () {})
+                      , null)
+	planets.push(jupiter);	
 
-	loader.load( 'model/earth/earth.gltf', function ( gltf ) {           
-		earth = gltf.scene;			
-		gltf.scene.scale.set( 2, 2, 2 );			   
-		gltf.scene.position.set(0, 2, 28);
-		scene.add(gltf.scene);
-	});
 
-	loader.load( 'model/mars/mars.gltf', function ( gltf ) {           
-		mars = gltf.scene;			
-		gltf.scene.scale.set( 2, 2, 2 );			   
-		gltf.scene.position.set(0, 2.5, 35);
-		scene.add(gltf.scene);
-	});
+  saturn = new Planet(0                     // x
+                    , 2				              // y
+                    , 50					          // z
+                    , 1					            // size
+                    , 0.02					        // speed
+                    , 48 					          // radius
+                    , 0					            // radian
+                    , Math.random() * 1000  // degree
+                    , new THREE.ImageUtils.loadTexture("img/saturn.jpg", {}, function () {})
+                    , null)
+	planets.push(saturn);			
 
-	loader.load( 'model/jupiter/jupiter.gltf', function ( gltf ) {           
-		jupiter = gltf.scene;			
-		gltf.scene.scale.set( 8, 8, 8 );			   
-		gltf.scene.position.set(0, 3, 43);
-		scene.add(gltf.scene);
-	});
+  uranus = new Planet(0            // x
+                    , 2				    // y
+                    , 58					// z
+                    , 1					  // size
+                    , 0.01					// speed
+                    , 56 					// radius
+                    , 0					  // radian
+                    , Math.random() * 1000  // degree
+                    , new THREE.ImageUtils.loadTexture("img/uranus.jpg", {}, function () {})
+                    , null)
+	planets.push(uranus);
 
-	
-	loader.load( 'model/saturn/saturn.gltf', function ( gltf ) {           
-		saturn = gltf.scene;			
-		gltf.scene.scale.set( 7, 7, 7 );			   
-		gltf.scene.position.set(0, 2, 55);
-		scene.add(gltf.scene);
-	});
+  neptune = new Planet(0          // x
+                    , 2				    // y
+                    , 66					// z
+                    , 1					  // size
+                    , 0.01					// speed
+                    , 64 					// radius
+                    , 0					  // radian
+                    , Math.random() * 1000  // degree
+                    , new THREE.ImageUtils.loadTexture("img/neptune.jpg", {}, function () {})
+                    , null)
+	planets.push(neptune);					
 
-	loader.load( 'model/uranus/uranus.gltf', function ( gltf ) {           
-		uranus = gltf.scene;			
-		gltf.scene.scale.set( 3, 3, 3 );			   
-		gltf.scene.position.set(0, 2, 62);
-		scene.add(gltf.scene);
-	});
+  function createObjects() {
+    // Generate Sun
+    sun = new THREE.Mesh(new THREE.SphereBufferGeometry(5, 32, 32), sunMaterial);
+    sun.position.set(0,2, 2);
+    scene.add(sun);
 
-	loader.load( 'model/neptune/neptune.gltf', function ( gltf ) {           
-		neptune = gltf.scene;			
-		gltf.scene.scale.set( 3, 3, 3 );			   
-		gltf.scene.position.set(0, 2, 70);
-		scene.add(gltf.scene);
-	});
+    // Generate Planets
+    for(planet in planets) {
+      if (planets.hasOwnProperty(planet)){
+        var geometry = new THREE.SphereGeometry(planets[planet].size, 16, 16);
+        var material = new THREE.MeshLambertMaterial({
+            map: planets[planet].texture
+        });
+
+        var planetObject = new THREE.Mesh(geometry, material);
+        planetObject.position.set(planets[planet].x, planets[planet].y, planets[planet].z);
+        planets[planet].mesh = planetObject;
+        scene.add(planetObject);
+      }
+    }
+  }
+
+	function getRing(size, innerDiameter, facets, myColor, distanceFromAxis) {
+		var ring1Geometry = new THREE.RingGeometry(size, innerDiameter, facets);
+		var ring1Material = new THREE.MeshBasicMaterial({color: myColor, side: THREE.DoubleSide});
+		var myRing = new THREE.Mesh(ring1Geometry, ring1Material);
+		myRing.position.set(distanceFromAxis, 2, 2);
+		myRing.rotation.x = Math.PI / 2;
+		scene.add(myRing);
+		return myRing;
+	}
+
+	// Draws orbits of each planet
+	function createVisibleOrbits() {
+		var orbitWidth = 0.015;
+    for(planet in planets) {
+      planetOrbit = getRing(planets[planet].z - sun.position.z + orbitWidth
+        , planets[planet].z - sun.position.z  - orbitWidth
+        , 320
+        , 0xffffff
+        , 0);
+    }
+	}
+
+	function movePlanets() {
+    var planet;
+    for (planet in planets) {
+      if (planets.hasOwnProperty(planet)) {
+        planets[planet].degree += planets[planet].speed;
+        planets[planet].radian = (planets[planet].degree / 180) * Math.PI;
+        planets[planet].mesh.position.x = planets[planet].x = (Math.cos(planets[planet].radian) * planets[planet].radius);
+        planets[planet].mesh.position.z = planets[planet].z = (-Math.sin(planets[planet].radian) * planets[planet].radius);
+        planets[planet].mesh.rotation.y += 0.01;
+        // if (planets[planet].ringsTexture) {
+        //   saturnrings.position.x = planets[planet].x = (Math.cos(planets[planet].radian) * planets[planet].radius);
+        //   saturnrings.position.y = planets[planet].y = (-Math.sin(planets[planet].radian) * planets[planet].radius);
+        //   saturnrings.position.z = 0
+        // }
+      }
+    }
+    sun.rotation.y += 0.001;
+  }
+
 
 	// Window resize
 	function onWindowResize( event ) {
@@ -169,10 +246,16 @@
 	}
 
 	function animate() {
+		controls.update();
+
+    movePlanets();
+
 		requestAnimationFrame(animate);
 		renderer.render(scene, camera);
 	}
 
+  createObjects();
+  createVisibleOrbits();
 	animate();
 			
 	</script>	
