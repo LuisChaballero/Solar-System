@@ -81,7 +81,7 @@
                       , 2					            // y
                       , 11 					          // z
                       , 0.6					          // size
-                      , 0.1					          // speed
+                      , 0.15					         // speed
                       , 9 					          // radius
                       , 0					            // radian
                       , Math.random() * 1000  // degree
@@ -194,6 +194,61 @@
         scene.add(planetObject);
       }
     }
+
+    createStars();
+  }
+
+  function createStars(){
+    var i, r = 20, starsGeometry = [new THREE.Geometry(), new THREE.Geometry()];
+    for (i = 0; i < 1250; i++) {
+        var vertex = new THREE.Vector3();
+        vertex.x = Math.random() * 2 - 1;
+        vertex.y = Math.random() * 2 - 1;
+        vertex.z = Math.random() * 2 - 1;
+        vertex.multiplyScalar(r);
+        starsGeometry[0].vertices.push(vertex)
+    }
+    for (i = 0; i < 3500; i++) {
+        var vertex = new THREE.Vector3();
+        vertex.x = Math.random() * 2 - 1;
+        vertex.y = Math.random() * 2 - 1;
+        vertex.z = Math.random() * 2 - 1;
+        vertex.multiplyScalar(r);
+        starsGeometry[1].vertices.push(vertex)
+    }
+    var stars, starsMaterials = [new THREE.ParticleBasicMaterial({
+        color: 5592405,
+        size: 2,
+        sizeAttenuation: false
+    }), new THREE.ParticleBasicMaterial({
+        color: 5592405,
+        size: 1,
+        sizeAttenuation: false
+    }), new THREE.ParticleBasicMaterial({
+        color: 3355443,
+        size: 2,
+        sizeAttenuation: false
+    }), new THREE.ParticleBasicMaterial({
+        color: 3815994,
+        size: 1,
+        sizeAttenuation: false
+    }), new THREE.ParticleBasicMaterial({
+        color: 1710618,
+        size: 2,
+        sizeAttenuation: false
+    })];
+    for (i = 10; i < 30; i++) {
+        stars = new THREE.ParticleSystem(starsGeometry[i % 2], starsMaterials[i % 5]);
+        stars.rotation.x = Math.random() * 5;
+        stars.rotation.y = Math.random() * 5;
+        stars.rotation.z = Math.random() * 5;
+        s = i * 10;
+        stars.scale.set(s, s, s);
+        stars.matrixAutoUpdate = false;
+        stars.updateMatrix();
+        scene.add(stars)
+    }
+
   }
 
 	function getRing(size, innerDiameter, facets, myColor, distanceFromAxis) {
