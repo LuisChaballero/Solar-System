@@ -20,8 +20,6 @@
 		<div id="info">
 	</div>
 	<script>		
-
-	// http://planetpixelemporium.com
 	
 	var scene = new THREE.Scene(); 
 	var planets = [];
@@ -246,6 +244,7 @@
 
   }
 
+  // Orbit material
 	function getRing(size, innerDiameter, facets, myColor, distanceFromAxis) {
 		var ring1Geometry = new THREE.RingGeometry(size, innerDiameter, facets);
 		var ring1Material = new THREE.MeshBasicMaterial({color: myColor, side: THREE.DoubleSide});
@@ -268,6 +267,7 @@
     }
 	}
 
+  // Planets rotation
 	function movePlanets() {
     var planet;
     for (planet in planets) {
@@ -277,11 +277,6 @@
         planets[planet].mesh.position.x = planets[planet].x = (Math.cos(planets[planet].radian) * planets[planet].radius);
         planets[planet].mesh.position.z = planets[planet].z = (-Math.sin(planets[planet].radian) * planets[planet].radius);
         planets[planet].mesh.rotation.y += 0.01;
-        // if (planets[planet].ringsTexture) {
-        //   saturnrings.position.x = planets[planet].x = (Math.cos(planets[planet].radian) * planets[planet].radius);
-        //   saturnrings.position.y = planets[planet].y = (-Math.sin(planets[planet].radian) * planets[planet].radius);
-        //   saturnrings.position.z = 0
-        // }
       }
     }
     sun.rotation.y += 0.001;
