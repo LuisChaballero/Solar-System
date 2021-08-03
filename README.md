@@ -1,1 +1,8 @@
-La escena 3D será creada usando Three.js y renderizará nuestro sistema solar. Dicha escena contendrá el sol y los ocho planetas rotando sobre él. También incluirá estrellas y el cinturón de asteroides. Se podrá observar el movimiento de los objetos mencionados a excepción del Sol que estará en una posición fija.
+## Solar System
+***
+This project is a three dimensional recreation of our solar system using ThreeJS. The scene consists of the sun along with all the planets and its correponding orbits and rotational movements. Some stars were also added in the background of the scene.
+
+## Credits
+***
+The planets´ textures were obtained from the following site: http://planetpixelemporium.com
+

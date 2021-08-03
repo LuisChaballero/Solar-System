@@ -1,0 +1,23 @@
+{
+  "name": "solarsystemproject",
+  "version": "1.0.0",
+  "description": "***\r This project is a three dimensional recreation of our solar system using ThreeJS. The scene consists of the sun along with all the planets and its correponding orbits and rotational movements. Some stars were also added in the background of the scene.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "gh-pages -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LuisChaballero/Solar-System.git"
+  },
+  "author": "Luis Caballero Noguez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LuisChaballero/Solar-System/issues"
+  },
+  "homepage": "https://github.com/LuisChaballero/Solar-System",
+  "dependencies": {
+    "gh-pages": "^3.2.3"
+  }
+}
